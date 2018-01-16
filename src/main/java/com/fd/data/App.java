@@ -6,10 +6,15 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 抓取国家统计局官网的省市区最新数据
@@ -18,21 +23,24 @@ import java.util.regex.Pattern;
  *
  */
 public class App {
+	static ObjectMapper OM = new ObjectMapper();
+
 	public static void main(String[] args) {
 		try {
 			List<RegionInfo> list = getregionlist(
 					"http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201703/t20170310_1471429.html");
-			SSQ ssq = analizeArea("江苏省南通市港闸区保利香槟国际", list);
-			System.out.println(ssq.getProvince());
-			System.out.println(ssq.getCity());
-			System.out.println(ssq.getArea());
-			System.out.println(ssq.getAddr());
+			// SSQ ssq = analizeArea("江苏省南通市港闸区保利香槟国际", list);
+			// System.out.println(ssq.getProvince());
+			// System.out.println(ssq.getCity());
+			// System.out.println(ssq.getArea());
+			// System.out.println(ssq.getAddr());
 
 			// list.forEach(o -> {
 			// System.out.println(o);
 			//
 			// });
-
+			Files.write(Paths.get("m:/20170310.json"), OM.writeValueAsBytes(list), StandardOpenOption.WRITE,
+					StandardOpenOption.CREATE);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
